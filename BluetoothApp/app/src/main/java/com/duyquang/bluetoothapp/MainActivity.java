@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.duyquang.bluetoothapp.ZoneObject.ListTimeZone;
 import com.duyquang.bluetoothapp.ZoneObject.Zone;
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     public BluetoothAdapter BTAdapter;
     public int REQUEST_BLUETOOTH = 1;
 
-    final String urlListTimeZone="http://api.timezonedb.com/v2/list-time-zone?key=N8MBHD3NY0ZM&format=json";
+    public static final String urlListTimeZone="http://api.timezonedb.com/v2/list-time-zone?key=N8MBHD3NY0ZM&format=json";
     public static List<Zone> zones=new ArrayList<>();
 
     @Override
@@ -51,6 +52,11 @@ public class MainActivity extends AppCompatActivity {
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(MainActivity.this,"No Internet Connection",Toast.LENGTH_LONG).show();
+                            }
+                        });
                         e.printStackTrace();
                     }
 

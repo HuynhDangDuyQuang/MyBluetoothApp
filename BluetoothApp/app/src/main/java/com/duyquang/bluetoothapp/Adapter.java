@@ -93,6 +93,11 @@ public class Adapter extends BaseAdapter implements Filterable {
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
+                        ((TimeZoneActivity)mContext).runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(mContext,"No Internet Connection",Toast.LENGTH_LONG).show();
+                            }
+                        });
 
                         e.printStackTrace();
                         isSent=false;
@@ -106,7 +111,10 @@ public class Adapter extends BaseAdapter implements Filterable {
                         Time time = (Time) gson.fromJson(rawListTimeZone, Time.class);
 
                         ManageConnectThread manageConnectThread=new ManageConnectThread();
-                        manageConnectThread.sendData(connectThread.getbTSocket(),new StringBuffer(" "+time.getFormatted()).reverse().toString()+"/"+iZone.getCountryCode()+" "+"UTC"+((utc>=0)?("+"):(""))+utc+"/");
+                        String data=(new StringBuffer(" "+time.getFormatted())).reverse().toString();
+                        manageConnectThread.sendData(connectThread.getbTSocket(),data);
+//                        Toast.makeText(mContext,data,Toast.LENGTH_SHORT).show();
+                        //+"/"+iZone.getCountryCode()+" "+"UTC"+((utc>=0)?("+"):(""))+utc+"/"
                         isSent=true;
 
                     }
